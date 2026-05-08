@@ -24,6 +24,7 @@
  *  THE SOFTWARE.
  */
 
+import { describe, it, expect } from "vitest";
 // powerbi
 import powerbi from "powerbi-visuals-api";
 import IDataViewObject = powerbi.DataViewObject;
@@ -132,6 +133,22 @@ describe("DataViewObjects", () => {
                     fontSize);
 
             objects[groupName][fillColorName]["solid"] = null;
+
+            const actualValue: string = DataViewObjects.getCommonValue(
+                objects,
+                fillColorProperty,
+                defaultColor);
+
+            expect(actualValue).toBe(defaultColor);
+        });
+
+        it("should return the defaultColor if solid exists but color is undefined", () => {
+            const defaultColor: string = "yellow",
+                objects: DataViewObjectsPBI = createDataViewObjects(
+                    fillColor,
+                    fontSize);
+
+            objects[groupName][fillColorName]["solid"] = {};
 
             const actualValue: string = DataViewObjects.getCommonValue(
                 objects,

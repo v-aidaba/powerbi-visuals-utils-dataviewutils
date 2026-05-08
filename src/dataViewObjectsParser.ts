@@ -67,10 +67,12 @@ export class DataViewObjectsParser {
         const properties: DataViewProperties = dataViewObjectParser.getProperties();
 
         for (const objectName in properties) {
-            for (const propertyName in properties[objectName]) {
-                const defaultValue: any = dataViewObjectParser[objectName][propertyName];
+            const objectProperties = (dataViewObjectParser as unknown as Record<string, unknown>)[objectName] as Record<string, unknown>;
 
-                dataViewObjectParser[objectName][propertyName] = DataViewObjects.getCommonValue(
+            for (const propertyName in properties[objectName]) {
+                const defaultValue: unknown = objectProperties[propertyName];
+
+                objectProperties[propertyName] = DataViewObjects.getCommonValue(
                     dataView.metadata.objects,
                     properties[objectName][propertyName],
                     defaultValue);
@@ -88,7 +90,7 @@ export class DataViewObjectsParser {
         dataViewObjectParser: DataViewObjectsParser,
         options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
 
-        const dataViewProperties: DataViewProperties = dataViewObjectParser && dataViewObjectParser[options.objectName];
+        const dataViewProperties = (dataViewObjectParser as unknown as Record<string, unknown>)?.[options.objectName] as DataViewProperties | undefined;
 
         if (!dataViewProperties) {
             return [];
@@ -96,7 +98,7 @@ export class DataViewObjectsParser {
 
         const instance: VisualObjectInstance = {
             objectName: options.objectName,
-            selector: null,
+            selector: <any>null,
             properties: {}
         };
 
@@ -117,7 +119,8 @@ export class DataViewObjectsParser {
 
         objectNames.forEach((objectName: string) => {
             if (DataViewObjectsParser.isPropertyEnumerable(objectName)) {
-                const propertyNames: string[] = Object.keys(this[objectName]);
+                const objectProperties = (this as unknown as Record<string, unknown>)[objectName] as Record<string, unknown>;
+                const propertyNames: string[] = Object.keys(objectProperties);
 
                 properties[objectName] = {};
 

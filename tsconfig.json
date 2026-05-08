@@ -1,17 +1,17 @@
 {
     "compilerOptions": {
         "allowJs": false,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
         "declaration": true,
         "sourceMap": true,
         "module": "ES2020",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
+        "skipLibCheck": true, // Required due to type errors in powerbi-visuals-api declarations. Can be removed once the type errors are fixed in powerbi-visuals-api.
         "target": "ES2020",
         "lib": [
             "es2020",
             "dom"
         ],
+        "rootDir": "./src",
         "outDir": "./lib"
     },
     "files": [
